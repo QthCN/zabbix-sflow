@@ -58,7 +58,7 @@ def init_args():
 
 
 def start_worker(sock):
-    w_cnt = 1
+    w_cnt = 8
     for w in range(0, w_cnt):
         pid = os.fork()
         if pid < 0:
