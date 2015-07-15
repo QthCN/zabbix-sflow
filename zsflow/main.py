@@ -14,6 +14,7 @@ header = None
 sampling = None
 polling = None
 port = None
+udp_threshold = None
 
 DB_NAME = "zsflow.db"
 INTERVAL = 15
@@ -35,17 +36,23 @@ def init_args():
     parser.add_argument("--port", action="store", dest="port",
                         help="sFlow collector listen port",
                         default=6343)
+    parser.add_argument("--udp-threshold", action="store",
+                        dest="udp_threshold",
+                        help="UDP Threshold",
+                        default=10000)
     args = parser.parse_args()
 
     global header
     global sampling
     global polling
     global port
+    global udp_threshold
 
     header = args.header
     sampling = args.sampling
     polling = args.polling
     port = args.port
+    udp_threshold = int(args.udp_threshold)
 
     return args
 
@@ -80,7 +87,7 @@ def sync_status():
 def sync_udp_status():
     now = datetime.datetime.now()
     before = now - datetime.timedelta(seconds=INTERVAL)
-    records = DB(DB_NAME).query_status("UDP", before, now)
+    records = DB(DB_NAME).query_record("UDP", before, now)
     if len(records) == 0:
         return
 
@@ -107,7 +114,14 @@ def sync_udp_status():
             max_record_key = key
 
     total_pkt_speed = len(records) * sampling / INTERVAL
-    print total_pkt_speed
+    if total_pkt_speed >= udp_threshold:
+        DB(DB_NAME).update_status(t="UDP",
+                                  status="BAD",
+                                  src_ip=max_record_key.split("-")[0],
+                                  src_port=int(max_record_key.split("-")[1]),
+                                  dest_ip=max_record_key.split("-")[2],
+                                  dest_port=int(max_record_key.split("-")[3]),
+                                  dt=datetime.datetime.now())
 
 def run():
     listen_addr = ("0.0.0.0", port)

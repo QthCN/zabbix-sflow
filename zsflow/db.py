@@ -34,6 +34,13 @@ class DB(object):
                "dest_ip text, dest_port integer, datetime text, "
                "type text)")
         c.execute(sql)
+        for type_ in ("TCP", "UDP", "ARP"):
+            sql = ("INSERT INTO STATUS(status, src_ip, src_port, "
+                   "dest_ip, dest_port, datetime, type) VALUES ( "
+                   "'GOOD', '1.1.1.1', 1, '2.2.2.2', 2, "
+                   "'1997-1-1 01:01:01', '{t}')".format(t=type_))
+            c.execute(sql)
+        conn.commit()
         c.close()
         conn.close()
 
@@ -66,7 +73,7 @@ class DB(object):
             if conn:
                 conn.close()
 
-    def query_status(self, tbname, begin_date, end_date):
+    def query_record(self, tbname, begin_date, end_date):
         conn = None
         c = None
         try:
@@ -88,7 +95,27 @@ class DB(object):
             if conn:
                 conn.close()
 
+    def update_status(self, t, status, src_ip, src_port, dest_ip,
+                      dest_port, dt):
+        conn = None
+        c = None
+        try:
+            conn = self.get_conn()
+            c = conn.cursor()
+            sql = ("UPDATE STATUS SET src_ip='{si}', src_port={sp}, "
+                   "dest_ip='{di}', dest_port={dp}, status='{s}',"
+                   "datetime='{dt}' WHERE "
+                   "type='{t}'".format(si=src_ip, sp=src_port, di=dest_ip,
+                                       dp=dest_port, s=status, t=t,
+                                       dt=dt.strftime('%y-%m-%d %H:%M:%S')))
+            c.execute(sql)
+            print sql
+            conn.commit()
+        except Exception as e:
+            print(str(e))
+        finally:
+            if c:
+                c.close()
+            if conn:
+                conn.close()
 
-if __name__ == "__main__":
-    db = DB("a.db")
-    db.init()
