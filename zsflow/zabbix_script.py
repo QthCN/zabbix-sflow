@@ -44,7 +44,8 @@ def run():
         if (type_.upper() == monitor_type.upper() and
             state == "BAD" and
             dt_ok(dt)):
-            print("UDP-{si}-{sp}-{di}-{dp}".format(
+            print("{s}-{si}-{sp}-{di}-{dp}".format(
+                s=monitor_type.upper(),
                 si=src_ip, sp=src_port,
                 di=dest_ip, dp=dest_port
             ))
