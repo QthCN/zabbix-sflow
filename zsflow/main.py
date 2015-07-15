@@ -196,8 +196,8 @@ def init_db():
     db.init()
 
 
-if __name__ == "__main__":
-    args = init_args()
+def main():
+    init_args()
     init_db()
     run()
 

@@ -10,4 +10,9 @@ setup(
     author_email="tianhuan@bingotree.cn",
     url="bingotree.cn",
     packages=find_packages(),
+    entry_points={
+        'console_scripts': [
+            'zsflow = zsflow.main:main',
+        ],
+    }
 )
