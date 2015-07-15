@@ -1,6 +1,6 @@
 # ZABBIX-SFLOW
 
-一个用于配合Zabbix监控工具的工具，基于sFlow提供了Zabbix的监控脚本及sFlow收集器。目前支持UDP攻击。
+一个用于配合Zabbix监控工具的sFlow收集器及Zabbix自定义监控脚本，基于sFlow提供了Zabbix的监控脚本及sFlow收集器。目前支持UDP攻击的检查。
 
 使用方法：
 
