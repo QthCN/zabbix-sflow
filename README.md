@@ -11,7 +11,7 @@
 zsflow --udp-threshold 1000
 ```
 
-Zabbix的自定义监控脚本输出：
+Zabbix的自定义监控脚本输出(*注意：监控脚本和上面的收集器需要在相同目录下执行*)：
 
 ```
 zsflow_zabbix | tail -n 1
