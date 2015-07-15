@@ -30,7 +30,7 @@ class DB(object):
         sql = "DROP TABLE IF EXISTS STATUS"
         c.execute(sql)
         sql = ("CREATE TABLE IF NOT EXISTS STATUS( "
-               "status text, src_ip, text, src_port integer, "
+               "status text, src_ip text, src_port integer, "
                "dest_ip text, dest_port integer, datetime text, "
                "type text)")
         c.execute(sql)
@@ -119,3 +119,19 @@ class DB(object):
             if conn:
                 conn.close()
 
+    def query_status(self):
+        conn = None
+        c = None
+        try:
+            conn = self.get_conn()
+            c = conn.cursor()
+            sql = "SELECT * FROM STATUS"
+            c.execute(sql)
+            return c.fetchall()
+        except Exception as e:
+            print(str(e))
+        finally:
+            if c:
+                c.close()
+            if conn:
+                conn.close()

@@ -11,8 +11,9 @@ setup(
     url="bingotree.cn",
     packages=find_packages(),
     entry_points={
-        'console_scripts': [
-            'zsflow = zsflow.main:main',
+        "console_scripts": [
+            "zsflow = zsflow.main:main",
+            "zsflow_zabbix = zsflow.zabbix_script:main",
         ],
     }
 )
